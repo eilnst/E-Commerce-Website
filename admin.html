@@ -1,0 +1,51 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Northstar Market</title>
+  <title>Admin Dashboard | ApnaKart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <div class="site-shell">
+    <nav class="topbar slim">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">N</span>
+        <span>Northstar Market</span>
+        <span class="brand-mark">A</span>
+        <span>ApnaKart</span>
+      </a>
+      <div class="topbar-actions">
+        <a class="ghost-button" href="index.html">Storefront</a>
+    <main class="admin-layout">
+      <section class="admin-hero">
+        <div>
+          <p class="eyebrow">Admin view</p>
+          <h1>Operations dashboard</h1>
+          <p>Review product structure, customer accounts, and locally stored orders from the demo checkout flow.</p>
+          <p class="eyebrow">Admin Panel</p>
+          <h1>Store dashboard</h1>
+          <p>Check products, users, and orders from this demo e-commerce website.</p>
+        </div>
+        <button class="pill-button" id="resetOrdersButton" type="button">Clear order history</button>
+        <button class="pill-button" id="resetOrdersButton" type="button">Clear Orders</button>
+      </section>
+
+      <section class="admin-grid">
+        <article class="admin-card">
+          <h2>Catalog summary</h2>
+          <h2>Product Summary</h2>
+          <div id="adminCatalog"></div>
+        </article>
+        <article class="admin-card">
+          <h2>Customer accounts</h2>
+          <h2>Registered Users</h2>
+          <div id="adminUsers"></div>
+        </article>
+      </section>
+
+      <section class="admin-card">
+        <h2>Recent orders</h2>
+        <h2>Recent Orders</h2>
+        <div id="adminOrders"></div>
+      </section>
+    </main>
