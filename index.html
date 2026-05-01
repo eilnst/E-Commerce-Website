@@ -1,0 +1,148 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Northstar Market</title>
+  <title>ApnaKart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <header class="hero">
+      <nav class="topbar">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">N</span>
+          <span>Northstar Market</span>
+          <span class="brand-mark">A</span>
+          <span>ApnaKart</span>
+        </a>
+        <div class="topbar-actions">
+          <button class="ghost-button" id="authButton" type="button">Sign in</button>
+          <button class="ghost-button" id="authButton" type="button">Login</button>
+          <button class="pill-button" id="cartButton" type="button">Cart <span id="cartCount">0</span></button>
+          <a class="ghost-button" href="admin.html">Admin</a>
+        </div>
+
+      <section class="hero-panel">
+        <div class="hero-copy">
+          <p class="eyebrow">Scalable shopping experience</p>
+          <h1>Build-ready e-commerce storefront with real shopping flows.</h1>
+          <p class="hero-text">Browse curated products, inspect rich details, save items to cart, authenticate as a customer, and place demo orders with persistent browser storage.</p>
+          <p class="eyebrow">Simple Indian E-Commerce Project</p>
+          <h1>Beginner-friendly online shopping website.</h1>
+          <p class="hero-text">This project includes product listing, product details, login, cart, checkout, and admin page. It is simple to understand and still looks good for an internship project.</p>
+          <div class="hero-actions">
+            <a class="pill-button" href="#catalog">Browse collection</a>
+            <button class="ghost-button" id="heroAuthButton" type="button">Create account</button>
+            <a class="pill-button" href="#catalog">View Products</a>
+            <button class="ghost-button" id="heroAuthButton" type="button">Create Account</button>
+          </div>
+        </div>
+        <div class="hero-card">
+          <p class="mini-label">Project goals covered</p>
+          <p class="mini-label">Features</p>
+          <ul class="check-list">
+            <li>Product listing and detail pages</li>
+            <li>Cart and checkout workflow</li>
+            <li>User authentication state</li>
+            <li>Admin-friendly order overview</li>
+            <li>Product listing page</li>
+            <li>Product detail page</li>
+            <li>Cart and checkout</li>
+            <li>Login and register</li>
+            <li>Admin page for orders</li>
+          </ul>
+        </div>
+      </section>
+    <main>
+      <section class="metrics">
+        <article>
+          <span>12</span>
+          <p>Featured products</p>
+          <span>6</span>
+          <p>Products added</p>
+        </article>
+        <article>
+          <span>24/7</span>
+          <p>Persistent cart storage</p>
+          <span>INR</span>
+          <p>Indian rupee pricing</p>
+        </article>
+        <article>
+          <span>1-click</span>
+          <p>Demo checkout completion</p>
+          <span>Easy</span>
+          <p>Simple checkout flow</p>
+        </article>
+      </section>
+
+      <section class="section-heading" id="catalog">
+        <div>
+          <p class="eyebrow">Catalog</p>
+          <h2>Shop by mood, not just category.</h2>
+          <p class="eyebrow">Product Catalog</p>
+          <h2>Shop by category.</h2>
+        </div>
+        <div class="filter-row" id="categoryFilters"></div>
+      </section>
+  <aside class="drawer" id="cartDrawer" aria-hidden="true">
+    <div class="drawer-header">
+      <div>
+        <p class="eyebrow">Your bag</p>
+        <h3>Cart & Checkout</h3>
+        <p class="eyebrow">Your Cart</p>
+        <h3>Checkout</h3>
+      </div>
+      <button class="icon-button" id="closeCartButton" type="button" aria-label="Close cart">×</button>
+      <button class="icon-button" id="closeCartButton" type="button" aria-label="Close cart">X</button>
+    </div>
+    <div class="drawer-body">
+      <div id="cartItems" class="stack-block"></div>
+      <div class="checkout-card">
+        <div class="total-row">
+          <span>Total</span>
+          <strong id="cartTotal">$0.00</strong>
+          <strong id="cartTotal">Rs 0</strong>
+        </div>
+        <form id="checkoutForm" class="stack-form">
+          <input type="text" id="checkoutName" placeholder="Full name" required>
+          <input type="email" id="checkoutEmail" placeholder="Email address" required>
+          <input type="text" id="checkoutAddress" placeholder="Shipping address" required>
+          <button class="pill-button wide" type="submit">Place demo order</button>
+          <input type="text" id="checkoutName" placeholder="Full Name" required>
+          <input type="email" id="checkoutEmail" placeholder="Email Address" required>
+          <input type="text" id="checkoutAddress" placeholder="Delivery Address" required>
+          <button class="pill-button wide" type="submit">Place Order</button>
+        </form>
+        <p class="fine-print">Orders are stored locally for demo purposes and appear on the admin page.</p>
+        <p class="fine-print">Orders are saved in browser storage and can be checked on the admin page.</p>
+      </div>
+    </div>
+  </aside>
+    <form method="dialog" class="auth-panel" id="authFormShell">
+      <div class="drawer-header">
+        <div>
+          <p class="eyebrow">Account</p>
+          <h3>Sign in or register</h3>
+          <p class="eyebrow">User Account</p>
+          <h3>Login or Register</h3>
+        </div>
+        <button class="icon-button" id="closeAuthButton" type="button" aria-label="Close auth">×</button>
+        <button class="icon-button" id="closeAuthButton" type="button" aria-label="Close auth">X</button>
+      </div>
+      <div class="tab-row">
+        <button class="tab-button active" type="button" data-auth-mode="signin">Sign in</button>
+        <button class="tab-button active" type="button" data-auth-mode="signin">Login</button>
+        <button class="tab-button" type="button" data-auth-mode="register">Register</button>
+      </div>
+      <div class="stack-form">
+        <input type="text" id="authName" placeholder="Full name">
+        <input type="email" id="authEmail" placeholder="Email address" required>
+        <input type="text" id="authName" placeholder="Full Name">
+        <input type="email" id="authEmail" placeholder="Email Address" required>
+        <input type="password" id="authPassword" placeholder="Password" required>
+        <button class="pill-button wide" id="authSubmitButton" type="submit">Sign in</button>
+        <button class="pill-button wide" id="authSubmitButton" type="submit">Login</button>
+      </div>
+      <p class="fine-print" id="authStatus">Use any email and password to create a local demo account.</p>
+      <p class="fine-print" id="authStatus">Use any email and password to create a demo account.</p>
+    </form>
+  </dialog>
