@@ -1,0 +1,53 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Detail | Northstar Market</title>
+  <title>Product Detail | ApnaKart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <div class="site-shell">
+    <nav class="topbar slim">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">N</span>
+        <span>Northstar Market</span>
+        <span class="brand-mark">A</span>
+        <span>ApnaKart</span>
+      </a>
+      <div class="topbar-actions">
+        <a class="ghost-button" href="index.html">Back to shop</a>
+        <a class="ghost-button" href="index.html">Back to Shop</a>
+        <button class="pill-button" id="cartButton" type="button">Cart <span id="cartCount">0</span></button>
+      </div>
+    </nav>
+  <aside class="drawer" id="cartDrawer" aria-hidden="true">
+    <div class="drawer-header">
+      <div>
+        <p class="eyebrow">Your bag</p>
+        <h3>Cart & Checkout</h3>
+        <p class="eyebrow">Your Cart</p>
+        <h3>Checkout</h3>
+      </div>
+      <button class="icon-button" id="closeCartButton" type="button" aria-label="Close cart">×</button>
+      <button class="icon-button" id="closeCartButton" type="button" aria-label="Close cart">X</button>
+    </div>
+    <div class="drawer-body">
+      <div id="cartItems" class="stack-block"></div>
+      <div class="checkout-card">
+        <div class="total-row">
+          <span>Total</span>
+          <strong id="cartTotal">$0.00</strong>
+          <strong id="cartTotal">Rs 0</strong>
+        </div>
+        <form id="checkoutForm" class="stack-form">
+          <input type="text" id="checkoutName" placeholder="Full name" required>
+          <input type="email" id="checkoutEmail" placeholder="Email address" required>
+          <input type="text" id="checkoutAddress" placeholder="Shipping address" required>
+          <button class="pill-button wide" type="submit">Place demo order</button>
+          <input type="text" id="checkoutName" placeholder="Full Name" required>
+          <input type="email" id="checkoutEmail" placeholder="Email Address" required>
+          <input type="text" id="checkoutAddress" placeholder="Delivery Address" required>
+          <button class="pill-button wide" type="submit">Place Order</button>
+        </form>
+      </div>
+    </div>
