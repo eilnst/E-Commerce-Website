@@ -24,19 +24,7 @@ window.NORTHSTAR_PRODUCTS = [
     specs: ["Laptop pocket", "Water resistant", "Strong zip"]
   },
   {
-    id: "tea-cup-set",
-    name: "Tea Cup Set",
-    category: "Kitchen",
-    price: 799,
-    rating: 4.9,
-    badge: "Popular",
-    image: "assets/tea-cup-set.svg",
-    summary: "Set of cups for tea, coffee, and guests.",
-    description: "A simple and stylish tea cup set for home use. Good for everyday kitchen use and small gatherings.",
-    specs: ["Set of 4", "Easy to clean", "Ceramic finish"]
-  },
-  {
-    id: "office-chair",
+      id: "office-chair",
     name: "Office Chair",
     category: "Furniture",
     price: 4599,
