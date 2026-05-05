@@ -1,12 +1,14 @@
-window.PRODUCTS = [
+window.NORTHSTAR_PRODUCTS = [
   {
     id: "study-lamp",
     name: "Study Lamp",
     category: "Home",
     price: 1299,
+    rating: 4.8,
+    badge: "Best Seller",
     image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80",
-    shortDesc: "Useful lamp for study table and bedroom.",
-    description: "This study lamp gives good light for reading, studying, and office work at home.",
+    summary: "A simple lamp for study table or bedroom use.",
+    description: "This lamp gives good lighting for reading and working. It is useful for students and working professionals.",
     specs: ["LED light", "Low power use", "1 year warranty"]
   },
   {
@@ -14,9 +16,11 @@ window.PRODUCTS = [
     name: "College Backpack",
     category: "Bags",
     price: 1499,
+    rating: 4.7,
+    badge: "New",
     image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80",
-    shortDesc: "Good backpack for college and travel.",
-    description: "This backpack has space for books, laptop, bottle, and daily essentials.",
+    summary: "Useful bag for college, office, and travel.",
+    description: "This backpack has enough space for books, a lunch box, and a laptop. It is comfortable to carry every day.",
     specs: ["Laptop pocket", "Water resistant", "Strong zip"]
   },
   {
@@ -24,9 +28,11 @@ window.PRODUCTS = [
     name: "Tea Cup Set",
     category: "Kitchen",
     price: 799,
-    image: "https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?auto=format&fit=crop&w=900&q=80",
-    shortDesc: "Simple tea cup set for home use.",
-    description: "A clean and stylish tea cup set for daily use and serving guests.",
+    rating: 4.9,
+    badge: "Popular",
+    image: "assets/tea-cup-set.svg",
+    summary: "Set of cups for tea, coffee, and guests.",
+    description: "A simple and stylish tea cup set for home use. Good for everyday kitchen use and small gatherings.",
     specs: ["Set of 4", "Easy to clean", "Ceramic finish"]
   },
   {
@@ -34,9 +40,11 @@ window.PRODUCTS = [
     name: "Office Chair",
     category: "Furniture",
     price: 4599,
+    rating: 4.6,
+    badge: "Premium",
     image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80",
-    shortDesc: "Comfortable chair for work and study.",
-    description: "This office chair is soft, supportive, and useful for long sitting hours.",
+    summary: "Comfortable chair for office and study work.",
+    description: "A soft and supportive chair that helps during long hours of work or online classes.",
     specs: ["Cushioned seat", "Strong frame", "Simple design"]
   },
   {
@@ -44,9 +52,11 @@ window.PRODUCTS = [
     name: "Classic Wrist Watch",
     category: "Accessories",
     price: 2199,
+    rating: 4.5,
+    badge: "Trending",
     image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80",
-    shortDesc: "Stylish watch for daily wear.",
-    description: "A simple and smart watch for college, office, and family functions.",
+    summary: "Smart-looking watch for daily wear.",
+    description: "This watch has a neat design and can be worn to college, office, or family functions.",
     specs: ["Water resistant", "Stylish strap", "Quartz movement"]
   },
   {
@@ -54,9 +64,11 @@ window.PRODUCTS = [
     name: "Sofa Cushion Set",
     category: "Home",
     price: 999,
+    rating: 4.9,
+    badge: "Top Rated",
     image: "https://images.unsplash.com/photo-1517705008128-361805f42e86?auto=format&fit=crop&w=900&q=80",
-    shortDesc: "Soft cushions for home comfort.",
-    description: "A good cushion set for sofa or bed to improve comfort and room look.",
+    summary: "Soft cushions to improve home look and comfort.",
+    description: "A good set of cushions for sofa or bed. It adds comfort and makes the room look better.",
     specs: ["Set of 2", "Soft fabric", "Easy maintenance"]
   }
 ];
