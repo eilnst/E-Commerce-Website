@@ -31,9 +31,13 @@ function formatPrice(price) {
 function showToast(message) {
   const toast = document.getElementById("toast");
   if (!toast) return;
+
   toast.textContent = message;
   toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 2000);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000);
 }
 
 function getCart() {
@@ -86,10 +90,12 @@ function changeQuantity(productId, change) {
 }
 
 function getDetailedCartItems() {
-  return getCart().map((item) => {
-    const product = getProduct(item.productId);
-    return { ...product, quantity: item.quantity };
-  });
+  return getCart()
+    .map((item) => {
+      const product = getProduct(item.productId);
+      return product ? { ...product, quantity: item.quantity } : null;
+    })
+    .filter(Boolean);
 }
 
 function renderFilters() {
