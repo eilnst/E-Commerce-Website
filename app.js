@@ -1,23 +1,59 @@
-const KEYS = {
-  cart: "apnakart-cart",
-  users: "apnakart-users",
-  currentUser: "apnakart-current-user",
-  orders: "apnakart-orders"
+const STORAGE_KEYS = {
+  cart: "ecokart-cart",
+  user: "ecokart-user",
+  users: "ecokart-users",
+  orders: "ecokart-orders"
 };
 
 const state = {
-  products: window.PRODUCTS || [],
-  selectedCategory: "All",
-  authMode: "login"
+  products: window.NORTHSTAR_PRODUCTS || [],
+  category: "All"
 };
 
-function getData(key, defaultValue) {
-  const value = localStorage.getItem(key);
-  return value ? JSON.parse(value) : defaultValue;
+function readStorage(key, fallbackValue) {
+  try {
+    const savedValue = localStorage.getItem(key);
+    return savedValue ? JSON.parse(savedValue) : fallbackValue;
+  } catch {
+    return fallbackValue;
+  }
 }
 
-function setData(key, value) {
+function writeStorage(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getCart() {
+  return readStorage(STORAGE_KEYS.cart, []);
+}
+
+function setCart(cart) {
+  writeStorage(STORAGE_KEYS.cart, cart);
+  updateCartCount();
+}
+
+function getUsers() {
+  return readStorage(STORAGE_KEYS.users, []);
+}
+
+function setUsers(users) {
+  writeStorage(STORAGE_KEYS.users, users);
+}
+
+function getCurrentUser() {
+  return readStorage(STORAGE_KEYS.user, null);
+}
+
+function setCurrentUser(user) {
+  writeStorage(STORAGE_KEYS.user, user);
+}
+
+function getOrders() {
+  return readStorage(STORAGE_KEYS.orders, []);
+}
+
+function setOrders(orders) {
+  writeStorage(STORAGE_KEYS.orders, orders);
 }
 
 function formatPrice(price) {
@@ -30,157 +66,82 @@ function formatPrice(price) {
 
 function showToast(message) {
   const toast = document.getElementById("toast");
-  if (!toast) return;
+  if (!toast) {
+    return;
+  }
 
   toast.textContent = message;
-  toast.classList.add("show");
+  toast.classList.add("visible");
 
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2000);
-}
-
-function getCart() {
-  return getData(KEYS.cart, []);
-}
-
-function setCart(cart) {
-  setData(KEYS.cart, cart);
-  updateCartCount();
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => {
+    toast.classList.remove("visible");
+  }, 2200);
 }
 
 function updateCartCount() {
-  const count = getCart().reduce((sum, item) => sum + item.quantity, 0);
-  document.querySelectorAll("#cartCount").forEach((el) => {
-    el.textContent = count;
+  const cart = getCart();
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  document.querySelectorAll("#cartCount").forEach((countBox) => {
+    countBox.textContent = totalItems;
   });
 }
 
-function getProduct(id) {
-  return state.products.find((product) => product.id === id);
+function getProductById(productId) {
+  return state.products.find((product) => product.id === productId);
 }
 
 function addToCart(productId) {
   const cart = getCart();
-  const item = cart.find((cartItem) => cartItem.productId === productId);
+  const existingItem = cart.find((item) => item.productId === productId);
 
-  if (item) {
-    item.quantity += 1;
+  if (existingItem) {
+    existingItem.quantity += 1;
   } else {
     cart.push({ productId, quantity: 1 });
   }
 
   setCart(cart);
   renderCart();
-  showToast("Product added to cart");
+  showToast("Product added to cart.");
 }
 
-function changeQuantity(productId, change) {
-  const updated = getCart()
+function changeQuantity(productId, changeValue) {
+  const updatedCart = getCart()
     .map((item) => {
       if (item.productId === productId) {
-        return { ...item, quantity: item.quantity + change };
+        return { ...item, quantity: item.quantity + changeValue };
       }
       return item;
     })
     .filter((item) => item.quantity > 0);
 
-  setCart(updated);
+  setCart(updatedCart);
   renderCart();
 }
 
-function getDetailedCartItems() {
+function getCartItemsWithDetails() {
   return getCart()
     .map((item) => {
-      const product = getProduct(item.productId);
+      const product = getProductById(item.productId);
       return product ? { ...product, quantity: item.quantity } : null;
     })
     .filter(Boolean);
 }
 
-function renderFilters() {
-  const filterBox = document.getElementById("categoryFilters");
-  if (!filterBox) return;
-
-  const categories = ["All", ...new Set(state.products.map((p) => p.category))];
-
-  filterBox.innerHTML = categories.map((category) => `
-    <button class="filter-btn ${state.selectedCategory === category ? "active" : ""}" data-category="${category}">
-      ${category}
-    </button>
-  `).join("");
-
-  filterBox.querySelectorAll("[data-category]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      state.selectedCategory = btn.dataset.category;
-      renderFilters();
-      renderProducts();
-    });
-  });
-}
-
-function renderProducts() {
-  const grid = document.getElementById("productGrid");
-  if (!grid) return;
-
-  const products = state.selectedCategory === "All"
-    ? state.products
-    : state.products.filter((p) => p.category === state.selectedCategory);
-
-  grid.innerHTML = products.map((product) => `
-    <div class="product-card">
-      <img src="${product.image}" alt="${product.name}">
-      <h3>${product.name}</h3>
-      <p>${product.shortDesc}</p>
-      <p class="price">${formatPrice(product.price)}</p>
-      <div class="nav-buttons">
-        <a class="btn light" href="product.html?id=${product.id}">View Details</a>
-        <button class="btn" data-add="${product.id}">Add to Cart</button>
-      </div>
-    </div>
-  `).join("");
-
-  grid.querySelectorAll("[data-add]").forEach((btn) => {
-    btn.addEventListener("click", () => addToCart(btn.dataset.add));
-  });
-}
-
-function renderProductDetail() {
-  const box = document.getElementById("productDetail");
-  if (!box) return;
-
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
-  const product = getProduct(id) || state.products[0];
-
-  box.innerHTML = `
-    <img src="${product.image}" alt="${product.name}">
-    <div>
-      <h2>${product.name}</h2>
-      <p class="price">${formatPrice(product.price)}</p>
-      <p>${product.description}</p>
-      <h3>Features</h3>
-      <ul>
-        ${product.specs.map((spec) => `<li>${spec}</li>`).join("")}
-      </ul>
-      <button id="detailAddBtn" class="btn">Add to Cart</button>
-    </div>
-  `;
-
-  document.getElementById("detailAddBtn").addEventListener("click", () => {
-    addToCart(product.id);
-  });
-}
-
 function renderCart() {
   const cartItemsBox = document.getElementById("cartItems");
   const cartTotalBox = document.getElementById("cartTotal");
-  if (!cartItemsBox || !cartTotalBox) return;
 
-  const items = getDetailedCartItems();
+  if (!cartItemsBox || !cartTotalBox) {
+    return;
+  }
+
+  const items = getCartItemsWithDetails();
 
   if (items.length === 0) {
-    cartItemsBox.innerHTML = "<p>Your cart is empty.</p>";
+    cartItemsBox.innerHTML = '<p class="empty-state">Your cart is empty. Add some plants first.</p>';
     cartTotalBox.textContent = formatPrice(0);
     return;
   }
@@ -191,238 +152,402 @@ function renderCart() {
     total += item.price * item.quantity;
 
     return `
-      <div class="cart-item">
+      <article class="cart-item">
         <img src="${item.image}" alt="${item.name}">
         <div>
           <h4>${item.name}</h4>
           <p>${formatPrice(item.price)}</p>
-          <div class="qty-row">
-            <button class="qty-btn" data-id="${item.id}" data-change="-1">-</button>
+          <div class="quantity-row">
+            <button type="button" data-product-id="${item.id}" data-change="-1">-</button>
             <span>${item.quantity}</span>
-            <button class="qty-btn" data-id="${item.id}" data-change="1">+</button>
+            <button type="button" data-product-id="${item.id}" data-change="1">+</button>
           </div>
         </div>
-      </div>
+      </article>
     `;
   }).join("");
 
   cartTotalBox.textContent = formatPrice(total);
 
-  cartItemsBox.querySelectorAll("[data-id]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      changeQuantity(btn.dataset.id, Number(btn.dataset.change));
+  cartItemsBox.querySelectorAll("[data-product-id]").forEach((button) => {
+    button.addEventListener("click", () => {
+      changeQuantity(button.dataset.productId, Number(button.dataset.change));
     });
   });
 }
 
-function openCart() {
-  document.getElementById("cartPanel")?.classList.remove("hidden");
-  renderCart();
+function toggleCart(showCart) {
+  const cartDrawer = document.getElementById("cartDrawer");
+  if (!cartDrawer) {
+    return;
+  }
+
+  cartDrawer.classList.toggle("open", showCart);
+  cartDrawer.setAttribute("aria-hidden", String(!showCart));
 }
 
-function closeCart() {
-  document.getElementById("cartPanel")?.classList.add("hidden");
+function renderFilters() {
+  const filterBox = document.getElementById("categoryFilters");
+  if (!filterBox) {
+    return;
+  }
+
+  const categories = ["All", ...new Set(state.products.map((product) => product.category))];
+
+  filterBox.innerHTML = categories.map((category) => `
+    <button class="filter-chip ${state.category === category ? "active" : ""}" type="button" data-category="${category}">
+      ${category}
+    </button>
+  `).join("");
+
+  filterBox.querySelectorAll("[data-category]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.category = button.dataset.category;
+      renderFilters();
+      renderCatalog();
+    });
+  });
 }
 
-function openAuth() {
-  document.getElementById("authPanel")?.classList.remove("hidden");
-  updateAuthModeUI();
+function renderCatalog() {
+  const productGrid = document.getElementById("productGrid");
+  if (!productGrid) {
+    return;
+  }
+
+  const filteredProducts = state.category === "All"
+    ? state.products
+    : state.products.filter((product) => product.category === state.category);
+
+  productGrid.innerHTML = filteredProducts.map((product) => `
+    <article class="product-card">
+      <div class="product-image-wrap">
+        <img src="${product.image}" alt="${product.name}">
+        <span class="badge">${product.badge}</span>
+      </div>
+      <div class="product-meta">
+        <div class="product-heading">
+          <div>
+            <p class="mini-label">${product.category}</p>
+            <h3>${product.name}</h3>
+          </div>
+          <strong>${formatPrice(product.price)}</strong>
+        </div>
+        <p>${product.summary}</p>
+        <div class="product-footer">
+          <a class="text-link" href="product.html?id=${product.id}">View Details</a>
+          <button class="pill-button alt" type="button" data-add="${product.id}">Add to Cart</button>
+        </div>
+      </div>
+    </article>
+  `).join("");
+
+  productGrid.querySelectorAll("[data-add]").forEach((button) => {
+    button.addEventListener("click", () => addToCart(button.dataset.add));
+  });
 }
 
-function closeAuth() {
-  document.getElementById("authPanel")?.classList.add("hidden");
+function renderProductDetail() {
+  const detailBox = document.getElementById("productDetail");
+  if (!detailBox) {
+    return;
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const selectedId = urlParams.get("id");
+  const product = getProductById(selectedId) || state.products[0];
+
+  detailBox.innerHTML = `
+    <section class="detail-gallery">
+      <img src="${product.image}" alt="${product.name}">
+    </section>
+    <section class="detail-copy">
+      <p class="eyebrow">${product.category}</p>
+      <h1>${product.name}</h1>
+      <div class="detail-meta">
+        <strong>${formatPrice(product.price)}</strong>
+        <span>${product.rating} / 5 Rating</span>
+      </div>
+      <p class="detail-text">${product.description}</p>
+      <div class="spec-list">
+        ${product.specs.map((spec) => `<span>${spec}</span>`).join("")}
+      </div>
+      <div class="hero-actions">
+        <button class="pill-button" type="button" id="detailAddToCart">Add to Cart</button>
+        <a class="ghost-button" href="index.html#catalog">Continue Shopping</a>
+      </div>
+    </section>
+  `;
+
+  document.getElementById("detailAddToCart").addEventListener("click", () => {
+    addToCart(product.id);
+  });
 }
 
-function updateAuthModeUI() {
-  const submitBtn = document.getElementById("authSubmitBtn");
-  const authText = document.getElementById("authText");
-  const authName = document.getElementById("authName");
+function updateAuthButton() {
+  const authButton = document.getElementById("authButton");
+  const user = getCurrentUser();
 
-  if (!submitBtn || !authText || !authName) return;
-
-  if (state.authMode === "login") {
-    submitBtn.textContent = "Login";
-    authText.textContent = "Login with your email and password.";
-    authName.style.display = "none";
-  } else {
-    submitBtn.textContent = "Register";
-    authText.textContent = "Create a new account for demo use.";
-    authName.style.display = "block";
+  if (authButton) {
+    authButton.textContent = user ? `Hi, ${user.name.split(" ")[0]}` : "Login";
   }
 }
 
-function handleAuth(event) {
+function openAuthDialog(mode) {
+  const dialog = document.getElementById("authDialog");
+  if (!dialog) {
+    return;
+  }
+
+  setAuthMode(mode);
+  dialog.showModal();
+}
+
+function setAuthMode(mode) {
+  const dialog = document.getElementById("authDialog");
+  const submitButton = document.getElementById("authSubmitButton");
+  const statusText = document.getElementById("authStatus");
+  const nameInput = document.getElementById("authName");
+
+  if (!dialog || !submitButton || !statusText || !nameInput) {
+    return;
+  }
+
+  dialog.dataset.mode = mode;
+  submitButton.textContent = mode === "signin" ? "Login" : "Create Account";
+  statusText.textContent = mode === "signin"
+    ? "Login with your registered email and password."
+    : "Create a demo account to save your plant orders.";
+  nameInput.style.display = mode === "signin" ? "none" : "block";
+
+  document.querySelectorAll("[data-auth-mode]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.authMode === mode);
+  });
+}
+
+function fillCheckoutForm() {
+  const user = getCurrentUser();
+  const nameInput = document.getElementById("checkoutName");
+  const emailInput = document.getElementById("checkoutEmail");
+
+  if (user && nameInput && emailInput) {
+    nameInput.value = user.name;
+    emailInput.value = user.email;
+  }
+}
+
+function handleAuthSubmit(event) {
   event.preventDefault();
 
+  const dialog = document.getElementById("authDialog");
+  const mode = dialog ? dialog.dataset.mode : "signin";
   const name = document.getElementById("authName").value.trim();
   const email = document.getElementById("authEmail").value.trim().toLowerCase();
   const password = document.getElementById("authPassword").value;
-  const users = getData(KEYS.users, []);
+  const users = getUsers();
 
-  if (state.authMode === "register") {
+  if (mode === "register") {
     if (!name) {
-      showToast("Enter your name");
+      showToast("Please enter your name.");
       return;
     }
 
-    const alreadyExists = users.some((user) => user.email === email);
-    if (alreadyExists) {
-      showToast("Email already registered");
+    const emailExists = users.some((user) => user.email === email);
+    if (emailExists) {
+      showToast("This email is already registered.");
       return;
     }
 
-    users.push({ name, email, password });
-    setData(KEYS.users, users);
-    setData(KEYS.currentUser, { name, email });
-    showToast("Account created");
-    closeAuth();
-    fillCheckoutUser();
-    updateLoginButton();
+    const newUser = { name, email, password };
+    users.push(newUser);
+    setUsers(users);
+    setCurrentUser({ name, email });
+    dialog.close();
+    updateAuthButton();
+    fillCheckoutForm();
+    showToast("Account created successfully.");
     return;
   }
 
   const foundUser = users.find((user) => user.email === email && user.password === password);
   if (!foundUser) {
-    showToast("User not found");
+    showToast("User not found. Please register first.");
     return;
   }
 
-  setData(KEYS.currentUser, { name: foundUser.name, email: foundUser.email });
-  showToast("Login successful");
-  closeAuth();
-  fillCheckoutUser();
-  updateLoginButton();
-}
-
-function fillCheckoutUser() {
-  const user = getData(KEYS.currentUser, null);
-  const name = document.getElementById("checkoutName");
-  const email = document.getElementById("checkoutEmail");
-
-  if (user && name && email) {
-    name.value = user.name;
-    email.value = user.email;
-  }
-}
-
-function updateLoginButton() {
-  const btn = document.getElementById("loginBtn");
-  const user = getData(KEYS.currentUser, null);
-  if (btn) {
-    btn.textContent = user ? `Hi, ${user.name}` : "Login";
-  }
+  setCurrentUser({ name: foundUser.name, email: foundUser.email });
+  dialog.close();
+  updateAuthButton();
+  fillCheckoutForm();
+  showToast("Login successful.");
 }
 
 function handleCheckout(event) {
   event.preventDefault();
 
-  const cart = getDetailedCartItems();
-  if (cart.length === 0) {
-    showToast("Cart is empty");
+  const items = getCartItemsWithDetails();
+  if (items.length === 0) {
+    showToast("Your cart is empty.");
     return;
   }
 
   const name = document.getElementById("checkoutName").value.trim();
   const email = document.getElementById("checkoutEmail").value.trim();
   const address = document.getElementById("checkoutAddress").value.trim();
+  const currentUser = getCurrentUser();
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
-  const orders = getData(KEYS.orders, []);
-  orders.unshift({
-    id: "ORD-" + Date.now(),
-    customer: name,
+  const order = {
+    id: `ORD-${Date.now()}`,
+    customer: currentUser ? currentUser.name : name,
     email,
     address,
     total,
-    itemCount,
-    date: new Date().toLocaleString("en-IN")
-  });
+    itemCount: totalItems,
+    createdAt: new Date().toLocaleString("en-IN")
+  };
 
-  setData(KEYS.orders, orders);
+  const orders = getOrders();
+  orders.unshift(order);
+  setOrders(orders);
   setCart([]);
   event.target.reset();
   renderCart();
-  closeCart();
-  showToast("Order placed successfully");
+  toggleCart(false);
+  showToast("Order placed successfully.");
 }
 
 function renderAdmin() {
-  const productsBox = document.getElementById("adminProducts");
+  const productSummaryBox = document.getElementById("adminCatalog");
   const usersBox = document.getElementById("adminUsers");
   const ordersBox = document.getElementById("adminOrders");
-  if (!productsBox || !usersBox || !ordersBox) return;
 
-  const users = getData(KEYS.users, []);
-  const orders = getData(KEYS.orders, []);
-  const categoryMap = {};
+  if (!productSummaryBox || !usersBox || !ordersBox) {
+    return;
+  }
+
+  const users = getUsers();
+  const orders = getOrders();
+  const categoryCount = {};
 
   state.products.forEach((product) => {
-    categoryMap[product.category] = (categoryMap[product.category] || 0) + 1;
+    if (!categoryCount[product.category]) {
+      categoryCount[product.category] = 0;
+    }
+    categoryCount[product.category] += 1;
   });
 
-  productsBox.innerHTML = Object.keys(categoryMap)
-    .map((category) => `<p>${category}: ${categoryMap[category]}</p>`)
-    .join("");
+  productSummaryBox.innerHTML = `
+    <div class="admin-list">
+      ${Object.keys(categoryCount).map((category) => `<p><strong>${categoryCount[category]}</strong> ${category} products</p>`).join("")}
+      <p><strong>${state.products.length}</strong> total products</p>
+    </div>
+  `;
 
-  usersBox.innerHTML = users.length
-    ? users.map((user) => `<p>${user.name} - ${user.email}</p>`).join("")
-    : "<p>No users yet.</p>";
+  usersBox.innerHTML = users.length > 0
+    ? `<div class="admin-list">${users.map((user) => `<p><strong>${user.name}</strong><span>${user.email}</span></p>`).join("")}</div>`
+    : '<p class="empty-state">No users registered yet.</p>';
 
-  ordersBox.innerHTML = orders.length
-    ? orders.map((order) => `
-        <div class="box" style="margin-bottom:10px;">
-          <p><strong>${order.id}</strong></p>
-          <p>${order.customer} - ${order.email}</p>
-          <p>${formatPrice(order.total)} | ${order.itemCount} items</p>
-          <p>${order.date}</p>
+  ordersBox.innerHTML = orders.length > 0
+    ? `<div class="order-table">${orders.map((order) => `
+      <article class="order-row">
+        <div>
+          <strong>${order.id}</strong>
+          <p>${order.customer} | ${order.email}</p>
         </div>
-      `).join("")
-    : "<p>No orders yet.</p>";
+        <div>
+          <strong>${formatPrice(order.total)}</strong>
+          <p>${order.itemCount} items | ${order.createdAt}</p>
+        </div>
+      </article>
+    `).join("")}</div>`
+    : '<p class="empty-state">No orders placed yet.</p>';
 }
 
-function bindEvents() {
-  document.getElementById("cartBtn")?.addEventListener("click", openCart);
-  document.getElementById("closeCartBtn")?.addEventListener("click", closeCart);
-  document.getElementById("loginBtn")?.addEventListener("click", openAuth);
-  document.getElementById("closeAuthBtn")?.addEventListener("click", closeAuth);
-  document.getElementById("checkoutForm")?.addEventListener("submit", handleCheckout);
-  document.getElementById("authForm")?.addEventListener("submit", handleAuth);
-
-  document.querySelectorAll("[data-mode]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      state.authMode = btn.dataset.mode;
-      updateAuthModeUI();
+function bindGlobalEvents() {
+  document.querySelectorAll("#cartButton").forEach((button) => {
+    button.addEventListener("click", () => {
+      renderCart();
+      toggleCart(true);
     });
   });
 
-  document.getElementById("clearOrdersBtn")?.addEventListener("click", () => {
-    setData(KEYS.orders, []);
-    renderAdmin();
-    showToast("Orders cleared");
+  const closeCartButton = document.getElementById("closeCartButton");
+  if (closeCartButton) {
+    closeCartButton.addEventListener("click", () => {
+      toggleCart(false);
+    });
+  }
+
+  const checkoutForm = document.getElementById("checkoutForm");
+  if (checkoutForm) {
+    fillCheckoutForm();
+    checkoutForm.addEventListener("submit", handleCheckout);
+  }
+
+  const authButton = document.getElementById("authButton");
+  if (authButton) {
+    authButton.addEventListener("click", () => {
+      openAuthDialog("signin");
+    });
+  }
+
+  const heroAuthButton = document.getElementById("heroAuthButton");
+  if (heroAuthButton) {
+    heroAuthButton.addEventListener("click", () => {
+      openAuthDialog("register");
+    });
+  }
+
+  const authForm = document.getElementById("authFormShell");
+  if (authForm) {
+    authForm.addEventListener("submit", handleAuthSubmit);
+  }
+
+  const closeAuthButton = document.getElementById("closeAuthButton");
+  const authDialog = document.getElementById("authDialog");
+  if (closeAuthButton && authDialog) {
+    closeAuthButton.addEventListener("click", () => {
+      authDialog.close();
+    });
+  }
+
+  document.querySelectorAll("[data-auth-mode]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setAuthMode(button.dataset.authMode);
+    });
   });
+
+  const resetOrdersButton = document.getElementById("resetOrdersButton");
+  if (resetOrdersButton) {
+    resetOrdersButton.addEventListener("click", () => {
+      setOrders([]);
+      renderAdmin();
+      showToast("Order history cleared.");
+    });
+  }
 }
 
 function init() {
   updateCartCount();
-  updateLoginButton();
-  fillCheckoutUser();
-  bindEvents();
+  updateAuthButton();
+  bindGlobalEvents();
   renderCart();
 
-  const page = document.body.dataset.page;
+  const currentPage = document.body.dataset.page;
 
-  if (page === "home") {
+  if (currentPage === "home") {
     renderFilters();
-    renderProducts();
+    renderCatalog();
   }
 
-  if (page === "product") {
+  if (currentPage === "product") {
     renderProductDetail();
   }
 
-  if (page === "admin") {
+  if (currentPage === "admin") {
     renderAdmin();
   }
 }
