@@ -3,92 +3,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ApnaKart</title>
+  <title>Eco-Kart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body data-page="home">
-  <header class="header">
-    <div class="container nav">
-      <h1 class="logo">ApnaKart</h1>
-      <div class="nav-buttons">
-        <button id="loginBtn" class="btn light">Login</button>
-        <button id="cartBtn" class="btn">Cart (<span id="cartCount">0</span>)</button>
-        <a href="admin.html" class="btn light">Admin</a>
-      </div>
-    </div>
+  <div class="site-shell">
+    <header class="hero">
+      <nav class="topbar">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">E</span>
+          <span>Eco-Kart</span>
+        </a>
+        <div class="topbar-actions">
+          <button class="ghost-button" id="authButton" type="button">Login</button>
+          <button class="pill-button" id="cartButton" type="button">Cart <span id="cartCount">0</span></button>
+          <a class="ghost-button" href="admin.html">Admin</a>
+        </div>
+      </nav>
 
-    <div class="container hero">
+      <section class="hero-panel">
+        <div class="hero-copy">
+          <p class="eyebrow">Green Living Starts At Home</p>
+          <h1>Shop plants, seeds, and flowers with a fresh eco-friendly look.</h1>
+          <p class="hero-text">Eco-Kart is a simple plant shopping website where users can browse indoor plants, garden flowers, and seed kits, then add them to cart and place demo orders.</p>
+          <div class="hero-actions">
+            <a class="pill-button" href="#catalog">Shop Plants</a>
+            <button class="ghost-button" id="heroAuthButton" type="button">Create Account</button>
+          </div>
+        </div>
+        <div class="hero-card">
+          <p class="mini-label">Store Highlights</p>
+          <ul class="check-list">
+            <li>Indoor plants and garden flowers</li>
+            <li>Seed kits for home growers</li>
+            <li>Cart and checkout flow</li>
+            <li>Admin page for order tracking</li>
+          </ul>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="metrics">
+        <article>
+          <span>6</span>
+          <p>Eco products</p>
+        </article>
+        <article>
+          <span>Rs</span>
+          <p>Plant pricing</p>
+        </article>
+        <article>
+          <span>Fresh</span>
+          <p>Green shopping theme</p>
+        </article>
+      </section>
+
+      <section class="section-heading" id="catalog">
+        <div>
+          <p class="eyebrow">Plant Catalog</p>
+          <h2>Choose your next green companion.</h2>
+        </div>
+        <div class="filter-row" id="categoryFilters"></div>
+      </section>
+
+      <section class="product-grid" id="productGrid"></section>
+    </main>
+  </div>
+
+  <aside class="drawer" id="cartDrawer" aria-hidden="true">
+    <div class="drawer-header">
       <div>
-        <p class="tag">Simple Indian E-Commerce Project</p>
-        <h2>Beginner-friendly online shopping website</h2>
-        <p>
-          This project shows product listing, product details, cart, login,
-          checkout, and admin page using HTML, CSS, and JavaScript.
-        </p>
-        <a href="#products" class="btn">View Products</a>
+        <p class="eyebrow">Your Plant Cart</p>
+        <h3>Checkout</h3>
+      </div>
+      <button class="icon-button" id="closeCartButton" type="button" aria-label="Close cart">X</button>
+    </div>
+    <div class="drawer-body">
+      <div id="cartItems" class="stack-block"></div>
+      <div class="checkout-card">
+        <div class="total-row">
+          <span>Total</span>
+          <strong id="cartTotal">Rs 0</strong>
+        </div>
+        <form id="checkoutForm" class="stack-form">
+          <input type="text" id="checkoutName" placeholder="Full Name" required>
+          <input type="email" id="checkoutEmail" placeholder="Email Address" required>
+          <input type="text" id="checkoutAddress" placeholder="Delivery Address" required>
+          <button class="pill-button wide" type="submit">Place Order</button>
+        </form>
+        <p class="fine-print">Orders are saved in browser storage and visible on the admin page.</p>
       </div>
     </div>
-  </header>
+  </aside>
 
-  <main class="container">
-    <section class="info-boxes">
-      <div class="box">
-        <h3>5</h3>
-        <p>Products</p>
+  <dialog class="auth-dialog" id="authDialog">
+    <form method="dialog" class="auth-panel" id="authFormShell">
+      <div class="drawer-header">
+        <div>
+          <p class="eyebrow">User Account</p>
+          <h3>Login or Register</h3>
+        </div>
+        <button class="icon-button" id="closeAuthButton" type="button" aria-label="Close auth">X</button>
       </div>
-      <div class="box">
-        <h3>Rs</h3>
-        <p>Indian pricing</p>
+      <div class="tab-row">
+        <button class="tab-button active" type="button" data-auth-mode="signin">Login</button>
+        <button class="tab-button" type="button" data-auth-mode="register">Register</button>
       </div>
-      <div class="box">
-        <h3>Easy</h3>
-        <p>Checkout flow</p>
+      <div class="stack-form">
+        <input type="text" id="authName" placeholder="Full Name">
+        <input type="email" id="authEmail" placeholder="Email Address" required>
+        <input type="password" id="authPassword" placeholder="Password" required>
+        <button class="pill-button wide" id="authSubmitButton" type="submit">Login</button>
       </div>
-    </section>
-
-    <section id="products">
-      <div class="section-title">
-        <h2>Product Catalog</h2>
-        <div id="categoryFilters" class="filters"></div>
-      </div>
-      <div id="productGrid" class="grid"></div>
-    </section>
-  </main>
-
-  <div id="cartPanel" class="panel hidden">
-    <div class="panel-head">
-      <h3>Your Cart</h3>
-      <button id="closeCartBtn" class="btn light">Close</button>
-    </div>
-    <div id="cartItems"></div>
-    <h4>Total: <span id="cartTotal">Rs 0</span></h4>
-    <form id="checkoutForm" class="form">
-      <input type="text" id="checkoutName" placeholder="Full Name" required>
-      <input type="email" id="checkoutEmail" placeholder="Email Address" required>
-      <input type="text" id="checkoutAddress" placeholder="Delivery Address" required>
-      <button type="submit" class="btn">Place Order</button>
+      <p class="fine-print" id="authStatus">Create a demo account to save your plant orders.</p>
     </form>
-  </div>
+  </dialog>
 
-  <div id="authPanel" class="panel hidden">
-    <div class="panel-head">
-      <h3>Login / Register</h3>
-      <button id="closeAuthBtn" class="btn light">Close</button>
-    </div>
-    <div class="auth-switch">
-      <button class="btn light" data-mode="login">Login</button>
-      <button class="btn light" data-mode="register">Register</button>
-    </div>
-    <form id="authForm" class="form">
-      <input type="text" id="authName" placeholder="Full Name">
-      <input type="email" id="authEmail" placeholder="Email Address" required>
-      <input type="password" id="authPassword" placeholder="Password" required>
-      <button type="submit" id="authSubmitBtn" class="btn">Login</button>
-    </form>
-    <p id="authText">Login with your email and password.</p>
-  </div>
-
-  <div id="toast" class="toast"></div>
+  <div class="toast" id="toast"></div>
 
   <script src="data.js"></script>
   <script src="app.js"></script>
