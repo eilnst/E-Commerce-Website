@@ -3,43 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin | ApnaKart</title>
+  <title>Admin Dashboard | Eco-Kart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body data-page="admin">
-  <header class="header small-header">
-    <div class="container nav">
-      <h1 class="logo">ApnaKart Admin</h1>
-      <div class="nav-buttons">
-        <a href="index.html" class="btn light">Storefront</a>
+  <div class="site-shell">
+    <nav class="topbar slim">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">E</span>
+        <span>Eco-Kart</span>
+      </a>
+      <div class="topbar-actions">
+        <a class="ghost-button" href="index.html">Storefront</a>
       </div>
-    </div>
-  </header>
+    </nav>
 
-  <main class="container">
-    <section class="section-title">
-      <h2>Store Dashboard</h2>
-      <button id="clearOrdersBtn" class="btn">Clear Orders</button>
-    </section>
+    <main class="admin-layout">
+      <section class="admin-hero">
+        <div>
+          <p class="eyebrow">Admin Panel</p>
+          <h1>Plant store dashboard</h1>
+          <p>Check plant categories, customer accounts, and recent plant orders from the Eco-Kart storefront.</p>
+        </div>
+        <button class="pill-button" id="resetOrdersButton" type="button">Clear Orders</button>
+      </section>
 
-    <section class="admin-grid">
-      <div class="box">
-        <h3>Products</h3>
-        <div id="adminProducts"></div>
-      </div>
-      <div class="box">
-        <h3>Users</h3>
-        <div id="adminUsers"></div>
-      </div>
-    </section>
+      <section class="admin-grid">
+        <article class="admin-card">
+          <h2>Catalog Summary</h2>
+          <div id="adminCatalog"></div>
+        </article>
+        <article class="admin-card">
+          <h2>Registered Users</h2>
+          <div id="adminUsers"></div>
+        </article>
+      </section>
 
-    <section class="box">
-      <h3>Recent Orders</h3>
-      <div id="adminOrders"></div>
-    </section>
-  </main>
+      <section class="admin-card">
+        <h2>Recent Orders</h2>
+        <div id="adminOrders"></div>
+      </section>
+    </main>
+  </div>
 
-  <div id="toast" class="toast"></div>
+  <div class="toast" id="toast"></div>
 
   <script src="data.js"></script>
   <script src="app.js"></script>
